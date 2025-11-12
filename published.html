@@ -1,0 +1,18 @@
+﻿<!doctype html><html><head><meta charset="utf-8"><title>Published News</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<div class="header-card"><img src="logo/logo.png" class="logo-img"><div class="title">
+Published News / ప్రచురిత వార్తలు</div></div>
+<div id="articles"></div>
+<script src="api/api.js"></script><script>
+async function load(){const arr=await getJSON('/published');
+const c=document.getElementById('articles');
+if(!Array.isArray(arr)||!arr.length){c.innerHTML='<p style="text-align:center;">No news yet.</p>';return;}
+c.innerHTML=arr.map(a=>`<div class="article">
+<div style="text-align:center;"><img src="logo/logo.png" style="max-width:180px"></div>
+<div class="headline">${a.heading||''}</div>
+<div style="color:#555;margin-top:5px;">${a.dateline||''} ${a.reporter?'| '+a.reporter:''}</div>
+${a.image?`<img src="${a.image}">`:''}
+<div style="white-space:pre-wrap;margin-top:10px;">${a.details||''}</div>
+<div style="text-align:right;margin-top:10px;"><button class="btn" onclick="window.print()">🖨 Print</button></div></div>`).join('');}
+load();
+</script></body></html>

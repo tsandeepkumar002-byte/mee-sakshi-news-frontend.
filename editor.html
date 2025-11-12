@@ -1,0 +1,18 @@
+﻿<!doctype html><html><head><meta charset="utf-8"><title>Editor Panel</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<div class="header-card"><img src="logo/logo.png" class="logo-img"><div class="title">Editor Panel / ఎడిటర్ ప్యానెల్</div></div>
+<div class="form-card" style="overflow:auto;"><table id="tbl" style="width:100%;border-collapse:collapse;">
+<thead><tr style="background:var(--primary);color:#fff;"><th>#</th><th>Reporter</th><th>Dateline</th><th>Heading</th><th>Image</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+<script src="api/api.js"></script><script>
+const tb=document.querySelector('#tbl tbody');
+async function load(){tb.innerHTML='<tr><td colspan=6>Loading...</td></tr>';
+const arr=await getJSON('/list');
+if(!Array.isArray(arr)||!arr.length){tb.innerHTML='<tr><td colspan=6>No news.</td></tr>';return;}
+tb.innerHTML=arr.map((r,i)=>`<tr><td>${i+1}</td><td>${r.reporter||''}</td><td>${r.dateline||''}</td>
+<td>${r.heading||''}</td><td>${r.image?`<img src="${r.image}" style="max-width:100px">`:''}</td>
+<td><button class="btn" onclick="approve('${r.id||i}')">Approve</button>
+<button class="btn" style="background:orange" onclick="reject('${r.id||i}')">Reject</button></td></tr>`).join('');}
+async function approve(id){await postJSON('/approve',{id});load();}
+async function reject(id){await postJSON('/reject',{id});load();}
+load();
+</script></body></html>
